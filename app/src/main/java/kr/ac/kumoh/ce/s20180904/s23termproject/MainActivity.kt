@@ -1,5 +1,7 @@
 package kr.ac.kumoh.ce.s20180904.s23termproject
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,13 +19,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -37,8 +37,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import androidx.navigation.NavType
 import kr.ac.kumoh.ce.s20180904.s23termproject.ui.theme.S23TermProjectTheme
@@ -154,6 +156,9 @@ fun TextTitle(title: String) {
 
 @Composable
 fun WordDetail(word: Word){
+    val webUri= Uri.parse("https://dictionary.cambridge.org/ko/%EC%82%AC%EC%A0%84/%EC%98%81%EC%96%B4-%ED%95%9C%EA%B5%AD%EC%96%B4/${word.word}")
+    val context = LocalContext.current
+
     Column (
         verticalArrangement = Arrangement.SpaceBetween
     ){
@@ -164,8 +169,8 @@ fun WordDetail(word: Word){
         )
         {
             AsyncImage(
-                model = "https://picsum.photos/300/300?random=${word.id}",
-                contentDescription = "노래 앨범 이미지",
+                model = word.image,
+                contentDescription = "word image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(400.dp)
@@ -175,10 +180,20 @@ fun WordDetail(word: Word){
             TextTitle(title = word.sentence)
         }
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                val intent = Intent(Intent.ACTION_VIEW, webUri)
+                startActivity(context, intent, null)
+                      },
             modifier=Modifier.fillMaxWidth()
         ) {
             Text("goto Dictionary")
         }
     }
 }
+
+//https://www.collinsdictionary.com/images/full/apple_158989157.jpg
+
+//UPDATE word SET image='https://www.collinsdictionary.com/images/full/apple_158989157.jpg' WHERE word='apple';
+//UPDATE word SET image='https://www.thoughtco.com/thmb/g8h6NnWWWVkm-KXNBgMx-0Edd2U=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages_482194715-56a1329e5f9b58b7d0bcf666.jpg' WHERE word='ocean';
+//UPDATE word SET image='https://upload.wikimedia.org/wikipedia/commons/1/1a/Crystal_Project_computer.png' WHERE word='computer';
+//UPDATE word SET image='https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg' WHERE word='mountain';

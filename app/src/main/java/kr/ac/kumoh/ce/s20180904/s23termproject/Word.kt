@@ -7,3 +7,4 @@ data class Word(
     val image: String,
     val sentence: String
 )
+
